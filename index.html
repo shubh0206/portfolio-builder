@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ultimate Portfolio Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #121826;
+            --dark-card: #1E2433;
+            --accent-primary: #3B82F6;
+            --accent-secondary: #10B981;
+            --text-primary: #E0E6EF;
+            --text-secondary: #8E9BAE;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .integration-card, .portfolio-section {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .integration-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .platform-icon {
+            font-size: 2.5rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .integration-card:hover .platform-icon {
+            color: var(--accent-primary);
+        }
+
+        .voice-input-active {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen py-12 px-4 lg:px-0">
+
+    <!-- Auth Section -->
+<div id="authSection" class="container mx-auto max-w-md mb-8 bg-gray-800 p-6 rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4 text-center">Login / Register</h2>
+    <div class="mb-4">
+        <input type="email" id="authEmail" placeholder="Email" class="w-full bg-gray-700 text-white p-3 rounded-lg mb-2">
+        <input type="password" id="authPassword" placeholder="Password" class="w-full bg-gray-700 text-white p-3 rounded-lg">
+    </div>
+    <div class="flex space-x-4">
+        <button onclick="handleLogin()" class="bg-blue-600 text-white px-6 py-3 rounded-lg flex-grow">Login</button>
+        <button onclick="handleRegister()" class="bg-green-600 text-white px-6 py-3 rounded-lg flex-grow">Register</button>
+    </div>
+</div>
+
+<!-- User Section (hidden by default) -->
+<div id="userSection" class="container mx-auto max-w-md mb-8 bg-gray-800 p-6 rounded-lg hidden">
+    <h2 class="text-2xl font-semibold mb-4 text-center">Welcome, <span id="userEmail"></span></h2>
+    <button onclick="handleLogout()" class="bg-red-600 text-white px-6 py-3 rounded-lg w-full">Logout</button>
+</div>
+
+    <div class="container mx-auto max-w-5xl">
+        <div class="bg-gray-900 rounded-2xl shadow-2xl p-8">
+            <h1 class="text-4xl font-bold text-center text-white mb-10">
+                Ultimate Portfolio Builder
+            </h1>
+
+            <!-- Platform Integration Section -->
+            <div class="mb-10">
+                <h2 class="text-2xl font-semibold mb-6 text-white">
+                    Import From Platforms
+                </h2>
+                <div class="grid md:grid-cols-4 gap-6">
+                    <!-- GitHub Integration -->
+                    <div class="integration-card bg-gray-800 p-6 rounded-lg text-center" onclick="connectGitHub()">
+                        <i class="fab fa-github platform-icon mb-4"></i>
+                        <h3 class="text-lg font-medium">GitHub</h3>
+                        <p class="text-sm text-gray-400">Import projects & contributions</p>
+                    </div>
+
+                    <!-- LinkedIn Integration -->
+                    <div class="integration-card bg-gray-800 p-6 rounded-lg text-center" onclick="connectLinkedIn()">
+                        <i class="fab fa-linkedin platform-icon mb-4"></i>
+                        <h3 class="text-lg font-medium">LinkedIn</h3>
+                        <p class="text-sm text-gray-400">Import professional experience</p>
+                    </div>
+
+                    <!-- LeetCode Integration -->
+                    <div class="integration-card bg-gray-800 p-6 rounded-lg text-center" onclick="connectLeetCode()">
+                        <i class="fas fa-code platform-icon mb-4"></i>
+                        <h3 class="text-lg font-medium">LeetCode</h3>
+                        <p class="text-sm text-gray-400">Import coding achievements</p>
+                    </div>
+
+                    <!-- Voice Input -->
+                    <div class="integration-card bg-gray-800 p-6 rounded-lg text-center" onclick="startVoiceInput()">
+                        <i class="fas fa-microphone platform-icon mb-4"></i>
+                        <h3 class="text-lg font-medium">Voice Input</h3>
+                        <p class="text-sm text-gray-400">Speak your portfolio details</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expanded Manual Portfolio Details -->
+            <div>
+                <h2 class="text-2xl font-semibold mb-6 text-white">
+                    Manual Portfolio Details
+                </h2>
+                
+                <!-- Personal Information -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Personal Information</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input type="text" id="fullName" placeholder="Full Name" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="email" id="email" placeholder="Email Address" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="tel" id="phone" placeholder="Phone Number" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="location" placeholder="Location (City, Country)" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!-- Contact Details -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Additional Contact Details</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input type="text" id="linkedin" placeholder="LinkedIn Profile URL" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="github" placeholder="GitHub Profile URL" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="website" placeholder="Personal Website URL" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="portfolio" placeholder="Portfolio Website" class="w-full bg-gray-700 border-gray-700 text-white p-3 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Profile Photo</h3>
+                    <div class="flex items-center">
+                        <input type="file" id="photoUpload" accept="image/*" class="bg-gray-700 text-white p-3 rounded-lg">
+                        <img id="photoPreview" src="" alt="Photo Preview" class="ml-4 w-32 h-32 object-cover rounded-full hidden">
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Skills</h3>
+                    <div class="flex mb-4">
+                        <input type="text" id="skillInput" placeholder="Add Skills (e.g., Python, React)" class="flex-grow bg-gray-700 border-gray-700 text-white p-3 rounded-lg mr-4">
+                        <button onclick="addSkill()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                            Add Skill
+                        </button>
+                    </div>
+                    <div id="skillsContainer" class="flex flex-wrap gap-2">
+                        <!-- Dynamic skills will appear here -->
+                    </div>
+                </div>
+
+                <!-- Experience Section -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Professional Experience</h3>
+                    <div id="experienceContainer">
+                        <div class="grid md:grid-cols-3 gap-4 mb-4">
+                            <input type="text" placeholder="Company" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Position" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Duration" class="bg-gray-700 text-white p-3 rounded-lg">
+                        </div>
+                        <textarea placeholder="Job Description" class="w-full bg-gray-700 text-white p-3 rounded-lg" rows="3"></textarea>
+                    </div>
+                    <button onclick="addExperience()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                        Add Another Experience
+                    </button>
+                </div>
+
+                <!-- Education Section -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Education</h3>
+                    <div id="educationContainer">
+                        <div class="grid md:grid-cols-3 gap-4 mb-4">
+                            <input type="text" placeholder="Institution" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Degree" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Graduation Year" class="bg-gray-700 text-white p-3 rounded-lg">
+                        </div>
+                    </div>
+                    <button onclick="addEducation()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                        Add Another Education
+                    </button>
+                </div>
+
+                <!-- Certifications Section -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Certifications</h3>
+                    <div id="certificationsContainer">
+                        <div class="grid md:grid-cols-3 gap-4 mb-4">
+                            <input type="text" placeholder="Certification Name" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Issuing Organization" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Date Obtained" class="bg-gray-700 text-white p-3 rounded-lg">
+                        </div>
+                        <input type="file" placeholder="Upload Certificate" class="bg-gray-700 text-white p-3 rounded-lg">
+                    </div>
+                    <button onclick="addCertification()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                        Add Another Certification
+                    </button>
+                </div>
+
+                <!-- Awards and Achievements -->
+                <div class="portfolio-section bg-gray-800 p-6 rounded-lg mb-6">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Awards and Achievements</h3>
+                    <div id="achievementsContainer">
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <input type="text" placeholder="Award/Achievement Name" class="bg-gray-700 text-white p-3 rounded-lg">
+                            <input type="text" placeholder="Issuing Organization" class="bg-gray-700 text-white p-3 rounded-lg">
+                        </div>
+                        <textarea placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg" rows="3"></textarea>
+                    </div>
+                    <button onclick="addAchievement()" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
+                        Add Another Achievement
+                    </button>
+                </div>
+
+                <!-- Generate Portfolio Button -->
+                <div class="text-center mt-8">
+                    <button onclick="generatePortfolio()" class="bg-green-600 text-white px-12 py-4 rounded-full text-lg hover:bg-green-700 transition">
+                        Generate Portfolio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Input Modal -->
+    <div id="voiceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Voice Input</h2>
+            <div id="voiceStatus" class="text-center mb-4 text-gray-400">
+                Click Start to begin speaking
+            </div>
+            <div class="flex justify-center space-x-4">
+                <button 
+                    id="startVoice" 
+                    onclick="startRecognition()" 
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg"
+                >
+                    Start
+                </button>
+                <button 
+                    id="stopVoice" 
+                    onclick="stopRecognition()" 
+                    class="bg-red-600 text-white px-6 py-3 rounded-lg hidden"
+                >
+                    Stop
+                </button>
+            </div>
+            <textarea 
+                id="voiceResult" 
+                class="w-full mt-4 bg-gray-700 text-white p-3 rounded-lg"
+                rows="4"
+                readonly
+            ></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Platform Connection Stubs
+        function connectGitHub() {
+            alert('GitHub integration coming soon! This will fetch your repositories and contributions.');
+        }
+
+        function connectLinkedIn() {
+            alert('LinkedIn integration coming soon! This will import your professional experience.');
+        }
+
+        function connectLeetCode() {
+            alert('LeetCode integration coming soon! This will import your coding challenges and achievements.');
+        }
+
+        // Skills Management
+        function addSkill() {
+            const skillInput = document.getElementById('skillInput');
+            const skillsContainer = document.getElementById('skillsContainer');
+            
+            if (skillInput.value.trim()) {
+                const skillTag = document.createElement('span');
+                skillTag.className = 'bg-blue-600 text-white px-3 py-1 rounded-full text-sm flex items-center';
+                skillTag.innerHTML = `
+                    ${skillInput.value}
+                    <button onclick="this.parentElement.remove()" class="ml-2 text-white opacity-70 hover:opacity-100">
+                        ✕
+                    </button>
+                `;
+                skillsContainer.appendChild(skillTag);
+                skillInput.value = '';
+            }
+        }
+
+        // Dynamic Section Management
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const newExperience = document.createElement('div');
+            newExperience.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" placeholder="Company" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Position" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Duration" class="bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+                <textarea placeholder="Job Description" class="w-full bg-gray-700 text-white p-3 rounded-lg mb-4" rows="3"></textarea>
+                <button onclick="this.closest('div').remove()" class="bg-red-600 text-white px-4 py-2 rounded-lg mb-4">
+                    Remove
+                </button>
+            `;
+            container.appendChild(newExperience);
+        }
+
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const newEducation = document.createElement('div');
+            newEducation.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" placeholder="Institution" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Degree" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Graduation Year" class="bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+                <button onclick="this.closest('div').remove()" class="bg-red-600 text-white px-4 py-2 rounded-lg mb-4">
+                    Remove
+                </button>
+            `;
+            container.appendChild(newEducation);
+        }
+
+        function addCertification() {
+            const container = document.getElementById('certificationsContainer');
+            const newCertification = document.createElement('div');
+            newCertification.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" placeholder="Certification Name" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Issuing Organization" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Date Obtained" class="bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+                <input type="file" placeholder="Upload Certificate" class="bg-gray-700 text-white p-3 rounded-lg">
+                <button onclick="this.closest('div').remove()" class="bg-red-600 text-white px-4 py-2 rounded-lg">
+                    Remove
+                </button>
+            `;
+            container.appendChild(newCertification);
+        }
+
+        function addAchievement() {
+            const container = document.getElementById('achievementsContainer');
+            const newAchievement = document.createElement('div');
+            newAchievement.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" placeholder="Award/Achievement Name" class="bg-gray-700 text-white p-3 rounded-lg">
+                    <input type="text" placeholder="Issuing Organization" class="bg-gray-700 text-white p-3 rounded-lg">
+                </div>
+                <textarea placeholder="Description" class="w-full bg-gray-700 text-white p-3 rounded-lg mb-4" rows="3"></textarea>
+                <button onclick="this.closest('div').remove()" class="bg-red-600 text-white px-4 py-2 rounded-lg">
+                    Remove
+                </button>
+            `;
+            container.appendChild(newAchievement);
+        }
+
+        // Voice Input Functionality
+        function startVoiceInput() {
+            const voiceModal = document.getElementById('voiceModal');
+            voiceModal.classList.remove('hidden');
+            voiceModal.classList.add('flex');
+        }
+
+        // Speech Recognition Setup
+        let recognition;
+        function startRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Speech recognition not supported in this browser.');
+                return;
+            }
+
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            const startButton = document.getElementById('startVoice');
+            const stopButton = document.getElementById('stopVoice');
+            const voiceStatus = document.getElementById('voiceStatus');
+            const voiceResult = document.getElementById('voiceResult');
+
+            startButton.classList.add('hidden');
+            stopButton.classList.remove('hidden');
+            voiceStatus.textContent = 'Listening...';
+
+            recognition.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0].transcript)
+                    .join('');
+                voiceResult.value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                voiceStatus.textContent = 'Error occurred: ' + event.error;
+            };
+
+            recognition.onend = () => {
+                startButton.classList.remove('hidden');
+                stopButton.classList.add('hidden');
+                voiceStatus.textContent = 'Recording stopped';
+            };
+
+            recognition.start();
+        }
+
+        function stopRecognition() {
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+
+        // Photo preview functionality
+        document.getElementById('photoUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('photoPreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Backend Integration Code
+        const API_BASE_URL = 'http://localhost:5000/api';
+
+        // Authentication functions
+        async function register(email, password) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Registration failed');
+                return data;
+            } catch (err) {
+                console.error('Registration error:', err);
+                throw err;
+            }
+        }
+
+        async function login(email, password) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Login failed');
+                return data;
+            } catch (err) {
+                console.error('Login error:', err);
+                throw err;
+            }
+        }
+
+        // Portfolio functions
+        async function getPortfolio(token) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/portfolio`, {
+                    headers: { 'x-auth-token': token }
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to get portfolio');
+                return data;
+            } catch (err) {
+                console.error('Get portfolio error:', err);
+                throw err;
+            }
+        }
+
+        async function savePortfolio(token, portfolioData) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/portfolio`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify(portfolioData)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Failed to save portfolio');
+                return data;
+            } catch (err) {
+                console.error('Save portfolio error:', err);
+                throw err;
+            }
+        }
+
+        // Auth UI functions
+        function checkAuthState() {
+            const token = localStorage.getItem('portfolioToken');
+            if (token) {
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('userSection').classList.remove('hidden');
+                loadPortfolioData(token);
+            } else {
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('userSection').classList.add('hidden');
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            
+            try {
+                const { token } = await login(email, password);
+                localStorage.setItem('portfolioToken', token);
+                document.getElementById('userEmail').textContent = email;
+                checkAuthState();
+                alert('Login successful!');
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+
+        async function handleRegister() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            
+            try {
+                const { token } = await register(email, password);
+                localStorage.setItem('portfolioToken', token);
+                document.getElementById('userEmail').textContent = email;
+                checkAuthState();
+                alert('Registration successful!');
+            } catch (error) {
+                alert('Registration failed: ' + error.message);
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('portfolioToken');
+            checkAuthState();
+            alert('Logged out successfully!');
+        }
+
+        async function loadPortfolioData(token) {
+            try {
+                const portfolio = await getPortfolio(token);
+                
+                // Populate form fields with portfolio data
+                if (portfolio.personalInfo) {
+                    document.getElementById('fullName').value = portfolio.personalInfo.fullName || '';
+                    document.getElementById('email').value = portfolio.personalInfo.email || '';
+                    document.getElementById('phone').value = portfolio.personalInfo.phone || '';
+                    document.getElementById('location').value = portfolio.personalInfo.location || '';
+                    
+                    if (portfolio.personalInfo.photoUrl) {
+                        document.getElementById('photoPreview').src = portfolio.personalInfo.photoUrl;
+                        document.getElementById('photoPreview').classList.remove('hidden');
+                    }
+                }
+                
+                if (portfolio.contactDetails) {
+                    document.getElementById('linkedin').value = portfolio.contactDetails.linkedin || '';
+                    document.getElementById('github').value = portfolio.contactDetails.github || '';
+                    document.getElementById('website').value = portfolio.contactDetails.website || '';
+                    document.getElementById('portfolio').value = portfolio.contactDetails.portfolio || '';
+                }
+                
+                // Populate skills
+                if (portfolio.skills && portfolio.skills.length > 0) {
+                    const skillsContainer = document.getElementById('skillsContainer');
+                    skillsContainer.innerHTML = '';
+                    portfolio.skills.forEach(skill => {
+                        const skillTag = document.createElement('span');
+                        skillTag.className = 'bg-blue-600 text-white px-3 py-1 rounded-full text-sm flex items-center';
+                        skillTag.innerHTML = `
+                            ${skill}
+                            <button onclick="this.parentElement.remove()" class="ml-2 text-white opacity-70 hover:opacity-100">
+                                ✕
+                            </button>
+                        `;
+                        skillsContainer.appendChild(skillTag);
+                    });
+                }
+                
+                // Note: You'll need to implement similar population for other sections
+                // (experience, education, certifications, achievements)
+                
+            } catch (error) {
+                console.error('Error loading portfolio:', error);
+            }
+        }
+
+        // Update your existing generatePortfolio function
+        async function generatePortfolio() {
+            const token = localStorage.getItem('portfolioToken');
+            if (!token) {
+                alert('Please login first');
+                return;
+            }
+
+            const portfolioData = {
+                personalInfo: {
+                    fullName: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    location: document.getElementById('location').value
+                },
+                contactDetails: {
+                    linkedin: document.getElementById('linkedin').value,
+                    github: document.getElementById('github').value,
+                    website: document.getElementById('website').value,
+                    portfolio: document.getElementById('portfolio').value
+                },
+                skills: Array.from(document.querySelectorAll('#skillsContainer span'))
+                    .map(skill => skill.textContent.replace('✕', '').trim()),
+                experience: Array.from(document.querySelectorAll('#experienceContainer > div'))
+                    .map(exp => ({
+                        company: exp.querySelector('input:nth-child(1)')?.value || '',
+                        position: exp.querySelector('input:nth-child(2)')?.value || '',
+                        duration: exp.querySelector('input:nth-child(3)')?.value || '',
+                        description: exp.querySelector('textarea')?.value || ''
+                    })),
+                education: Array.from(document.querySelectorAll('#educationContainer > div'))
+                    .map(edu => ({
+                        institution: edu.querySelector('input:nth-child(1)')?.value || '',
+                        degree: edu.querySelector('input:nth-child(2)')?.value || '',
+                        graduationYear: edu.querySelector('input:nth-child(3)')?.value || ''
+                    })),
+                certifications: Array.from(document.querySelectorAll('#certificationsContainer > div'))
+                    .map(cert => ({
+                        name: cert.querySelector('input:nth-child(1)')?.value || '',
+                        organization: cert.querySelector('input:nth-child(2)')?.value || '',
+                        dateObtained: cert.querySelector('input:nth-child(3)')?.value || ''
+                    })),
+                achievements: Array.from(document.querySelectorAll('#achievementsContainer > div'))
+                    .map(achieve => ({
+                        name: achieve.querySelector('input:nth-child(1)')?.value || '',
+                        organization: achieve.querySelector('input:nth-child(2)')?.value || '',
+                        description: achieve.querySelector('textarea')?.value || ''
+                    }))
+            };
+
+            try {
+                const result = await savePortfolio(token, portfolioData);
+                console.log('Portfolio saved:', result);
+                alert('Portfolio saved successfully!');
+            } catch (error) {
+                console.error('Error saving portfolio:', error);
+                alert('Error saving portfolio: ' + error.message);
+            }
+        }
+
+        // Initialize auth state when page loads
+        document.addEventListener('DOMContentLoaded', checkAuthState);
+
+        
+
+        
+    </script>
+</body>
+</html>
